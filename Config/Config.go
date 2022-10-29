@@ -12,6 +12,7 @@ type ConfigStruct struct {
 	Port          int      `yaml:"port"`
 	Nodes         []string `yaml:"nodes"`
 	DataDirectory string   `yaml:"dataDirectory"`
+	DataFileName  string   `yaml:"data_file"`
 }
 
 var data, _ = os.ReadFile("./config.yml")

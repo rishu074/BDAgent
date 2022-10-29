@@ -6,3 +6,4 @@ nodes:
   - game2
   - game3
 dataDirectory: "./data"
+data_file: "data.zip"

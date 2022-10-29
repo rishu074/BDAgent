@@ -1,8 +1,6 @@
 package api
 
 import (
-	"encoding/json"
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -13,11 +11,19 @@ import (
 
 func DowloadFileManager(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
-		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
+		Static.ErrorRouteHandler(w, r, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 		return
 	}
 
-	nodeName := strings.Split(r.URL.Path, "/")[3]
+	arrayOfPath := strings.Split(r.URL.Path, "/")
+
+	if len(arrayOfPath) != 5 {
+		Static.ErrorRouteHandler(w, r, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		return
+	}
+
+	nodeName := arrayOfPath[3]
+	servername := arrayOfPath[4]
 
 	if !Tools.StringInSlice(nodeName, *&Conf.Conf.Nodes) {
 		Static.ErrorRouteHandler(w, r, "No Nodes Found with this name.", 404)
@@ -29,13 +35,16 @@ func DowloadFileManager(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	type dataStructure struct {
-		Data string
+	if DoDirExists, _ := Tools.DoDirectoryExists(*&Conf.Conf.DataDirectory + "/" + nodeName + "/" + servername); !DoDirExists {
+		Static.ErrorRouteHandler(w, r, "Sorry, but your server not Found", 404)
+		return
 	}
 
-	fmt.Println(Conf.Conf.Nodes)
+	if DoDirExists, _ := Tools.DoDirectoryExists(*&Conf.Conf.DataDirectory + "/" + nodeName + "/" + servername + "/" + *&Conf.Conf.DataFileName); !DoDirExists {
+		Static.ErrorRouteHandler(w, r, "Your server found, but it seems there was no data in your server.", 404)
+		return
+	}
 
-	data, _ := json.Marshal(&dataStructure{Data: "Hello from json."})
-
-	w.Write(data)
+	// File found lmao
+	http.ServeFile(w, r, *&Conf.Conf.DataDirectory+"/"+nodeName+"/"+servername+"/"+*&Conf.Conf.DataFileName)
 }
