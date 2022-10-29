@@ -26,6 +26,9 @@ echo ""
 if [ ! -z "$args" ]; then
     echo "No args specified."
     exit 1
+elif [ "$args" == "" ]; then
+    echo "No args specified."
+    exit 
 fi
 
 # Check if nginx is install 
