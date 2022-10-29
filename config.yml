@@ -7,3 +7,4 @@ nodes:
   - game3
 dataDirectory: "./data"
 data_file: "data.zip"
+token: "SomerandomToken"
