@@ -73,9 +73,10 @@ do
         echo "zipping $dir"
         zip -r data.zip . -i ./*
         shopt -s extglob
-        for name in ./*
+        shopt -s dotglob
+        for name in *
         do
-                if [ "$name" != "./data.zip" ] ;
+                if [ "$name" != "data.zip" ] ;
                 then
                         echo $name
                         rm -rf $name
@@ -98,7 +99,7 @@ do
         if [ "$name" != "./$args" ] ;
         then
             rm -rf $name
-            fi
+        fi
  done
 
 # Now we have exactly what we want in /uploads folder
