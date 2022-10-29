@@ -20,8 +20,8 @@ if [ ! -d "/var/lib/pterodactyl/volumes" ]; then
 fi
 
 
-if [ ! -d "$args[0]" ]; then
-    echo "No args specified or Folder does not exist to take backup in."
+if [ ! -z "$args[0]" ]; then
+    echo "No args specified."
     exit 1
 fi
 
