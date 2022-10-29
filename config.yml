@@ -8,3 +8,4 @@ nodes:
 dataDirectory: "./data"
 data_file: "data.zip"
 token: "SomerandomToken"
+BashFile: "./avails/download.sh"

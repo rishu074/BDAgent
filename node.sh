@@ -11,7 +11,7 @@ fi
 
 echo "Starting Backup Script."
 # define args 
-args=("$@")
+args=$1
 
 # Check if pterodactyl directory exists 
 if [ ! -d "/var/lib/pterodactyl/volumes" ]; then

@@ -14,6 +14,7 @@ type ConfigStruct struct {
 	DataDirectory string   `yaml:"dataDirectory"`
 	DataFileName  string   `yaml:"data_file"`
 	Token         string   `yaml:"token"`
+	BashFile      string   `yaml:"BashFile"`
 }
 
 var data, _ = os.ReadFile("./config.yml")
