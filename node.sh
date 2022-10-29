@@ -13,10 +13,90 @@ echo "Starting Backup Script."
 # define args 
 args=("$@")
 
-echo $args[0]
-
 # Check if pterodactyl directory exists 
-if [ ! -d "/var/lib/pterodactyl/voluems" ]; then
-    echo "No pterodactyl/voluems directory."
+if [ ! -d "/var/lib/pterodactyl/volumes" ]; then
+    echo "No pterodactyl/volumes directory."
     exit 1
 fi
+
+
+if [ ! -d "$args[0]" ]; then
+    echo "No args specified or Folder does not exist to take backup in."
+    exit 1
+fi
+
+# Check if nginx is install 
+if [ -x "$(command -v nginx)" ]; then
+    echo "Nginx should be installed to run this script."
+    exit 1
+elif [ -x "$(command -v zip)" ]; then
+    echo "zip should be installed to run this script."
+    exit 1
+elif [ -x "$(command -v unzip)" ]; then
+    echo "unzip should be installed to run this script."
+    exit 1
+elif [ -x "$(command -v wget)" ]; then
+    echo "wget should be installed to run this script."
+    exit 1
+elif [ -x "$(command - curl)" ]; then
+    echo "curl should be installed to run this script."
+    exit 1
+fi
+
+# We have nginx + pterodactyl
+
+# check if nginx conf already exists
+if [ -f "/etc/nginx/sites-enables/auto.conf" ]; then
+    rm /etc/nginx/sites-enables/auto.conf
+fi
+
+# Clear uploads folder
+mkdir /uploads
+cd /uploads
+rm -rf *
+
+# Copy all server's data 
+echo "Copying data from pterodactyl directory..."
+cp -r /var/lib/pterodactyl/volumes/* /uploads/
+
+
+# Loop through all the folders in /uploads and zip every type of data to data.zip in each folder 
+cd /uploads
+
+echo "Looping through servers"
+for dir in */
+do
+        cd $dir
+        echo "zipping $dir"
+        zip -r data.zip . -i ./*
+        shopt -s extglob
+        for name in ./*
+        do
+                if [ "$name" != "./data.zip" ] ;
+                then
+                        echo $name
+                        rm -rf $name
+                fi
+        done
+        cd ../;
+done
+
+# Now we have our data folders setupped, now zip all the folders 
+echo "Zipping all the data folders"
+cd /uploads
+
+zip -r "$args[0]" ./*
+
+# Now we have our data zip settupped,
+# Delete all the folders except the zip folder
+cd /uploads
+for name in ./*
+do
+        if [ "$name" != "./$args[0]" ] ;
+        then
+            rm -rf $name
+            fi
+ done
+
+# Now we have exactly what we want in /uploads folder
+echo "Dunaduna"
