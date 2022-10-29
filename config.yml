@@ -1,3 +1,8 @@
 name: "Auto backup dnxrg"
 version: "1.0.0"
 port: 1337
+nodes: 
+  - game1
+  - game2
+  - game3
+dataDirectory: "./data"

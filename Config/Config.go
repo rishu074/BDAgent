@@ -7,9 +7,11 @@ import (
 )
 
 type ConfigStruct struct {
-	Name    string
-	Version string
-	Port    int
+	Name          string   `yaml:"name"`
+	Version       string   `yaml:"version"`
+	Port          int      `yaml:"port"`
+	Nodes         []string `yaml:"nodes"`
+	DataDirectory string   `yaml:"dataDirectory"`
 }
 
 var data, _ = os.ReadFile("./config.yml")
