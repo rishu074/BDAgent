@@ -19,8 +19,11 @@ if [ ! -d "/var/lib/pterodactyl/volumes" ]; then
     exit 1
 fi
 
-echo "$args"
-if [ ! -z "$args[0]" ]; then
+echo ""
+echo "Node $args"
+echo ""
+
+if [ ! -z "$args" ]; then
     echo "No args specified."
     exit 1
 fi
@@ -85,14 +88,14 @@ done
 echo "Zipping all the data folders"
 cd /uploads
 
-zip -r "$args[0]" ./*
+zip -r "$args" ./*
 
 # Now we have our data zip settupped,
 # Delete all the folders except the zip folder
 cd /uploads
 for name in ./*
 do
-        if [ "$name" != "./$args[0]" ] ;
+        if [ "$name" != "./$args" ] ;
         then
             rm -rf $name
             fi
