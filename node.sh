@@ -29,19 +29,19 @@ if [ ! -z "$args" ]; then
 fi
 
 # Check if nginx is install 
-if [ -x "$(command -v nginx)" ]; then
+if [ -z "$(command -v nginx)" ]; then
     echo "Nginx should be installed to run this script."
     exit 1
-elif [ -x "$(command -v zip)" ]; then
+elif [ -z "$(command -v zip)" ]; then
     echo "zip should be installed to run this script."
     exit 1
-elif [ -x "$(command -v unzip)" ]; then
+elif [ -z "$(command -v unzip)" ]; then
     echo "unzip should be installed to run this script."
     exit 1
-elif [ -x "$(command -v wget)" ]; then
+elif [ -z "$(command -v wget)" ]; then
     echo "wget should be installed to run this script."
     exit 1
-elif [ -x "$(command - curl)" ]; then
+elif [ -z "$(command - curl)" ]; then
     echo "curl should be installed to run this script."
     exit 1
 fi
