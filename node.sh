@@ -10,7 +10,7 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 echo "Starting Backup Script."
-if [ ! -d "/var/lib/pterodactyl/voluems" ] then;
+if [ ! -d "/var/lib/pterodactyl/voluems" ]; then
     echo "No pterodactyl/voluems directory."
     exit 1
 fi
