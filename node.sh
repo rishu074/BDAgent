@@ -19,7 +19,7 @@ if [ ! -d "/var/lib/pterodactyl/volumes" ]; then
     exit 1
 fi
 
-
+echo "$args"
 if [ ! -z "$args[0]" ]; then
     echo "No args specified."
     exit 1
