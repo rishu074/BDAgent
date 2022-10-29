@@ -41,7 +41,7 @@ elif [ -z "$(command -v unzip)" ]; then
 elif [ -z "$(command -v wget)" ]; then
     echo "wget should be installed to run this script."
     exit 1
-elif [ -z "$(command - curl)" ]; then
+elif [ -z "$(command -v curl)" ]; then
     echo "curl should be installed to run this script."
     exit 1
 fi
