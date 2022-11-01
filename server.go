@@ -1,4 +1,4 @@
-package BDAgent
+package main
 
 import (
 	"log"
