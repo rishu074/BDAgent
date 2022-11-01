@@ -8,9 +8,9 @@ import (
 	"strconv"
 	"syscall"
 
-	Conf "github.com/NotRoyadma/auto_backup-dnxrg/config"
-	"github.com/NotRoyadma/auto_backup-dnxrg/logger"
-	Home "github.com/NotRoyadma/auto_backup-dnxrg/routes"
+	Conf "github.com/NotRoyadma/BDAgent/config"
+	"github.com/NotRoyadma/BDAgent/logger"
+	Home "github.com/NotRoyadma/BDAgent/routes"
 )
 
 func main() {

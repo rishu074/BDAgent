@@ -7,10 +7,10 @@ import (
 	"os"
 	"time"
 
-	Tools "github.com/NotRoyadma/auto_backup-dnxrg/avails"
-	Conf "github.com/NotRoyadma/auto_backup-dnxrg/config"
-	"github.com/NotRoyadma/auto_backup-dnxrg/logger"
-	Static "github.com/NotRoyadma/auto_backup-dnxrg/routes/static"
+	Tools "github.com/NotRoyadma/BDAgent/avails"
+	Conf "github.com/NotRoyadma/BDAgent/config"
+	"github.com/NotRoyadma/BDAgent/logger"
+	Static "github.com/NotRoyadma/BDAgent/routes/static"
 	websocket "github.com/gorilla/websocket"
 )
 

@@ -4,11 +4,11 @@ import (
 	"net/http"
 	"strings"
 
-	Conf "github.com/NotRoyadma/auto_backup-dnxrg/config"
-	Logger "github.com/NotRoyadma/auto_backup-dnxrg/logger"
-	Api "github.com/NotRoyadma/auto_backup-dnxrg/routes/api"
-	Ftp "github.com/NotRoyadma/auto_backup-dnxrg/routes/api/ftp"
-	Static "github.com/NotRoyadma/auto_backup-dnxrg/routes/static"
+	Conf "github.com/NotRoyadma/BDAgent/config"
+	Logger "github.com/NotRoyadma/BDAgent/logger"
+	Api "github.com/NotRoyadma/BDAgent/routes/api"
+	Ftp "github.com/NotRoyadma/BDAgent/routes/api/ftp"
+	Static "github.com/NotRoyadma/BDAgent/routes/static"
 )
 
 func DefaultHandler(w http.ResponseWriter, r *http.Request) {

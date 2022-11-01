@@ -1,4 +1,4 @@
-module github.com/NotRoyadma/auto_backup-dnxrg
+module github.com/NotRoyadma/BDAgent
 
 go 1.19
 

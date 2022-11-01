@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	Conf "github.com/NotRoyadma/auto_backup-dnxrg/config"
+	Conf "github.com/NotRoyadma/BDAgent/config"
 )
 
 func WriteLog(message string) bool {

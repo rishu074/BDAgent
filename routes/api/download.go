@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"strings"
 
-	Tools "github.com/NotRoyadma/auto_backup-dnxrg/avails"
-	Conf "github.com/NotRoyadma/auto_backup-dnxrg/config"
-	Static "github.com/NotRoyadma/auto_backup-dnxrg/routes/static"
+	Tools "github.com/NotRoyadma/BDAgent/avails"
+	Conf "github.com/NotRoyadma/BDAgent/config"
+	Static "github.com/NotRoyadma/BDAgent/routes/static"
 )
 
 func DowloadFileManager(w http.ResponseWriter, r *http.Request) {
