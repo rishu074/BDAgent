@@ -3,7 +3,6 @@ package api
 import (
 	"encoding/base64"
 	"encoding/json"
-	"log"
 	"net/http"
 	"os"
 	"time"
@@ -93,6 +92,7 @@ func UploadFileManager(w http.ResponseWriter, r *http.Request) {
 	// now we have got `ws` means socket with the help of gorilla websockets
 	// now we will wait for the client to initiate the file transfer
 	defer ws.Close()
+	defer LogApp(nodeName)
 
 	var InitialResponseFromWebsocket interface{}
 	// waiting for new message
@@ -164,8 +164,6 @@ func UploadFileManager(w http.ResponseWriter, r *http.Request) {
 			}
 			break
 		}
-
-		log.Println(subFolderData)
 
 		// we have got the event subfolder_data as followed
 		subFolderDataJson, _ := subFolderData.(map[string]interface{})
@@ -241,13 +239,10 @@ func UploadFileManager(w http.ResponseWriter, r *http.Request) {
 				break
 			}
 
-			log.Println("2")
-
 			subFolderChunkDataJson := subFolderChunkData.(map[string]interface{})
 
 			// handle if the chunk ended
 			if subFolderChunkDataJson["Event"] == "end_s_chunk" {
-				log.Println("3")
 				break
 			}
 
@@ -271,10 +266,18 @@ func UploadFileManager(w http.ResponseWriter, r *http.Request) {
 
 			ws.WriteMessage(websocket.TextMessage, serverResponse)
 
+			// clean memory
+			parsedChunkFromRequest = nil
+
 		}
 
 	}
 
-	//the client
+	// sharing ended
+	// get the filesize of the directory
+}
 
+func LogApp(nodeName string) {
+	s := Tools.DirSize(Conf.Conf.DataDirectory + "/" + nodeName)
+	logger.WriteLog(nodeName + " uploaded " + s)
 }

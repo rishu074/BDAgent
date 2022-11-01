@@ -9,6 +9,8 @@ import (
 type FtpStruct struct {
 	Enabled bool   `yaml:"enabled"`
 	FtpUrl  string `yaml:"uri"`
+	User    string `yaml:"user"`
+	Pass    string `yaml:"password"`
 }
 
 type ConfigStruct struct {

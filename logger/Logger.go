@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	Conf "github.com/NotRoyadma/auto_backup-dnxrg/config"
 )
@@ -17,7 +18,7 @@ func WriteLog(message string) bool {
 	}
 
 	defer LoggerFile.Close()
-	n, err := LoggerFile.Write([]byte("\n" + message))
+	n, err := LoggerFile.Write([]byte("\n" + time.Now().String() + " > " + message))
 	if err != nil || n == 0 {
 		return false
 	}
@@ -36,7 +37,7 @@ func WriteERRLog(message string) bool {
 	}
 
 	defer LoggerFile.Close()
-	n, err := LoggerFile.Write([]byte("\n" + message))
+	n, err := LoggerFile.Write([]byte("\n" + time.Now().String() + " > " + message))
 	if err != nil || n == 0 {
 		return false
 	}
@@ -55,7 +56,7 @@ func WriteHttpLogs(message string) bool {
 	}
 
 	defer LoggerFile.Close()
-	n, err := LoggerFile.Write([]byte("\n" + message))
+	n, err := LoggerFile.Write([]byte("\n" + time.Now().String() + " > " + message))
 	if err != nil || n == 0 {
 		return false
 	}
@@ -88,7 +89,7 @@ func WriteAutoHTTPLogs(w http.ResponseWriter, r *http.Request) bool {
 	token := r.Header.Get("token")
 
 	//log it to file
-	n, err := LoggerFile.Write([]byte("\n" + ip + " " + userAgent + " " + path + " " + token))
+	n, err := LoggerFile.Write([]byte("\n" + time.Now().String() + " > " + ip + " " + userAgent + " " + path + " " + token))
 	if err != nil || n == 0 {
 		return false
 	}
@@ -99,7 +100,6 @@ func WriteAutoHTTPLogs(w http.ResponseWriter, r *http.Request) bool {
 }
 
 func DeleteLogFiles() {
-	log.Println("remove all")
 	er := os.RemoveAll("./logs/")
 	if er != nil {
 		log.Panic(er)
