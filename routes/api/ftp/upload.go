@@ -130,7 +130,7 @@ func UploadFileManager(w http.ResponseWriter, r *http.Request) {
 	// got the client initialization message
 	InitialResponseFromWebsocketJson, _ := InitialResponseFromWebsocket.(map[string]interface{})
 	if InitialResponseFromWebsocketJson["Event"] != "initiate_file" {
-		logger.WriteERRLog("api/ftp/upload.go 133 " + InitialResponseFromWebsocket.(string))
+		logger.WriteERRLog("api/ftp/upload.go 133 " + InitialResponseFromWebsocketJson["Event"].(string))
 		ws.Close()
 		return
 	}
@@ -264,8 +264,9 @@ func UploadFileManager(w http.ResponseWriter, r *http.Request) {
 				break
 			}
 
-			if subFolderChunkDataJson["Event"] != "subfolder_chunk_data" {
-				logger.WriteERRLog("api/ftp/upload.go 268 " + subFolderChunkData.(string))
+			if subFolderChunkDataJson["Event"].(string) != "subfolder_chunk_data" {
+				logger.WriteERRLog("api/ftp/upload.go 268 ")
+				logger.WriteERRLog(subFolderChunkDataJson["Event"].(string))
 				ws.Close()
 				return
 			}
