@@ -27,6 +27,25 @@ func WriteLog(message string) bool {
 	return true
 }
 
+func WriteERRLog(message string) bool {
+	// open the log file if not create it
+	LoggerFile, err := os.OpenFile("./logs/app.error.log", os.O_CREATE|os.O_WRONLY, 0644)
+
+	if err != nil {
+		return false
+	}
+
+	defer LoggerFile.Close()
+	n, err := LoggerFile.Write([]byte(message))
+	if err != nil || n == 0 {
+		return false
+	}
+
+	log.Println("[APP ERROR LOG] > ", message)
+
+	return true
+}
+
 func WriteHttpLogs(message string) bool {
 	// open the log file if not create it
 	LoggerFile, err := os.OpenFile("./logs/http.log", os.O_CREATE|os.O_WRONLY, 0644)
@@ -57,8 +76,8 @@ func WriteAutoHTTPLogs(w http.ResponseWriter, r *http.Request) bool {
 
 	var ip string
 	// get the ip adress
-	if *&Conf.Conf.IpHeader != "default" {
-		ip = r.Header.Get(*Conf.Conf.IpHeader)
+	if Conf.Conf.IpHeader != "default" {
+		ip = r.Header.Get(Conf.Conf.IpHeader)
 	} else {
 		ip = r.RemoteAddr
 	}

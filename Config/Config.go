@@ -7,21 +7,22 @@ import (
 )
 
 type FtpStruct struct {
-	Enabled bool `yaml:"enabled"`
-	FtpUrl string `yaml:"uri"`
+	Enabled bool   `yaml:"enabled"`
+	FtpUrl  string `yaml:"uri"`
 }
 
 type ConfigStruct struct {
-	Name          string   `yaml:"name"`
-	Version       string   `yaml:"version"`
-	Port          int      `yaml:"port"`
-	Nodes         []string `yaml:"nodes"`
-	DataDirectory string   `yaml:"dataDirectory"`
-	DataFileName  string   `yaml:"data_file"`
-	Token         string   `yaml:"token"`
-	BashFile      string   `yaml:"BashFile"`
-	IpHeader      string   `yaml:"IP_HEADER"`
+	Name          string    `yaml:"name"`
+	Version       string    `yaml:"version"`
+	Port          int       `yaml:"port"`
+	Nodes         []string  `yaml:"nodes"`
+	DataDirectory string    `yaml:"dataDirectory"`
+	DataFileName  string    `yaml:"data_file"`
+	Token         string    `yaml:"token"`
+	BashFile      string    `yaml:"BashFile"`
+	IpHeader      string    `yaml:"IP_HEADER"`
 	Ftp           FtpStruct `yaml:"ftp"`
+	ChunkSize     int       `yaml:"chunk_size"`
 }
 
 var data, _ = os.ReadFile("./config.yml")

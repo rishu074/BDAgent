@@ -13,3 +13,4 @@ IP_HEADER: "default"
 ftp: 
   enabled: true
   uri: "172.105.59.152:22"
+chunk_size: 4

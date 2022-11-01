@@ -25,26 +25,31 @@ func DowloadFileManager(w http.ResponseWriter, r *http.Request) {
 	nodeName := arrayOfPath[3]
 	servername := arrayOfPath[4]
 
-	if !Tools.StringInSlice(nodeName, *&Conf.Conf.Nodes) {
+	if !Tools.StringInSlice(nodeName, Conf.Conf.Nodes) {
 		Static.ErrorRouteHandler(w, r, "No Nodes Found with this name.", 404)
 		return
 	}
 
-	if DoDirExists, _ := Tools.DoDirectoryExists(*&Conf.Conf.DataDirectory + "/" + nodeName); !DoDirExists {
+	if DoDirExists, _ := Tools.DoDirectoryExists(Conf.Conf.DataDirectory); !DoDirExists {
+		Static.ErrorRouteHandler(w, r, "No Folder found, probably due to misconfiguratin", 404)
+		return
+	}
+
+	if DoDirExists, _ := Tools.DoDirectoryExists(Conf.Conf.DataDirectory + "/" + nodeName); !DoDirExists {
 		Static.ErrorRouteHandler(w, r, "No File found, probably due to misconfiguratin", 404)
 		return
 	}
 
-	if DoDirExists, _ := Tools.DoDirectoryExists(*&Conf.Conf.DataDirectory + "/" + nodeName + "/" + servername); !DoDirExists {
+	if DoDirExists, _ := Tools.DoDirectoryExists(Conf.Conf.DataDirectory + "/" + nodeName + "/" + servername); !DoDirExists {
 		Static.ErrorRouteHandler(w, r, "Sorry, but your server not Found", 404)
 		return
 	}
 
-	if DoDirExists, _ := Tools.DoDirectoryExists(*&Conf.Conf.DataDirectory + "/" + nodeName + "/" + servername + "/" + *&Conf.Conf.DataFileName); !DoDirExists {
+	if DoDirExists, _ := Tools.DoDirectoryExists(Conf.Conf.DataDirectory + "/" + nodeName + "/" + servername + "/" + Conf.Conf.DataFileName); !DoDirExists {
 		Static.ErrorRouteHandler(w, r, "Your server found, but it seems there was no data in your server.", 404)
 		return
 	}
 
 	// File found lmao
-	http.ServeFile(w, r, *&Conf.Conf.DataDirectory+"/"+nodeName+"/"+servername+"/"+*&Conf.Conf.DataFileName)
+	http.ServeFile(w, r, Conf.Conf.DataDirectory+"/"+nodeName+"/"+servername+"/"+Conf.Conf.DataFileName)
 }
