@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/json"
-	"log"
 	"net/http"
 	"time"
 
@@ -103,7 +102,12 @@ func UploadFileManager(w http.ResponseWriter, r *http.Request) {
 
 	// now we have got `ws` means socket with the help of gorilla websockets
 	// now we will wait for the client to initiate the file transfer
+	var TotalBytes int64 = 0
 	defer ws.Close()
+	defer func() {
+		s := Tools.Ptettier(TotalBytes)
+		logger.WriteLog(nodeName + " uploaded " + s)
+	}()
 
 	var InitialResponseFromWebsocket interface{}
 	// waiting for new message
@@ -175,8 +179,6 @@ func UploadFileManager(w http.ResponseWriter, r *http.Request) {
 			}
 			break
 		}
-
-		log.Println(subFolderData)
 
 		// we have got the event subfolder_data as followed
 		subFolderDataJson, _ := subFolderData.(map[string]interface{})
@@ -255,13 +257,10 @@ func UploadFileManager(w http.ResponseWriter, r *http.Request) {
 				break
 			}
 
-			log.Println("2")
-
 			subFolderChunkDataJson := subFolderChunkData.(map[string]interface{})
 
 			// handle if the chunk ended
 			if subFolderChunkDataJson["Event"] == "end_s_chunk" {
-				log.Println("3")
 				break
 			}
 
@@ -278,6 +277,7 @@ func UploadFileManager(w http.ResponseWriter, r *http.Request) {
 			r := bytes.NewReader(parsedChunkFromRequest)
 			ftpClient.StorFrom(Conf.Conf.DataDirectory+"/"+nodeName+"/"+FolderNameFromClient+"/"+"data.zip", r, uint64(CurrentByte))
 			CurrentByte = CurrentByte + int64(len(parsedChunkFromRequest))
+			TotalBytes += CurrentByte
 
 			// the client was waiting for server to send back the response after writing
 			serverResponse, _ := json.Marshal(ServerResponse{
@@ -294,20 +294,16 @@ func UploadFileManager(w http.ResponseWriter, r *http.Request) {
 }
 
 func ConnectFtp() (*ftp.ServerConn, error) {
-	log.Println("Connecting ftp...")
 	ftpClient, err := ftp.Dial(Conf.Conf.Ftp.FtpUrl, ftp.DialWithTimeout(5*time.Second))
-	log.Println("Connected")
 
 	if err != nil {
 		return nil, err
 	}
 
-	log.Println("logging...")
 	err = ftpClient.Login(Conf.Conf.Ftp.User, Conf.Conf.Ftp.Pass)
 	if err != nil {
 		return nil, err
 	}
-	log.Println("Logged")
 
 	return ftpClient, nil
 }

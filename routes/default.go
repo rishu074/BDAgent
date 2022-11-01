@@ -23,8 +23,13 @@ func DefaultHandler(w http.ResponseWriter, r *http.Request) {
 		Api.StatusApiHandler(w, r)
 		return
 	} else if strings.Contains(r.URL.Path, "/api/download/") {
-		Api.DowloadFileManager(w, r)
-		return
+		if Conf.Conf.Ftp.Enabled {
+			Ftp.DowloadFileManager(w, r)
+			return
+		} else {
+			Api.DowloadFileManager(w, r)
+			return
+		}
 	} else if strings.Contains(r.URL.Path, "/api/upload") {
 		if Conf.Conf.Ftp.Enabled {
 			Ftp.UploadFileManager(w, r)
