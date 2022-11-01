@@ -23,6 +23,9 @@ func DefaultHandler(w http.ResponseWriter, r *http.Request) {
 	} else if strings.Contains(r.URL.Path, "/api/download/") {
 		Api.DowloadFileManager(w, r)
 		return
+	} else if strings.Contains(r.URL.Path, "/api/upload") {
+		Api.UploadFileManager(w, r)
+		return
 	}
 
 	//404 page

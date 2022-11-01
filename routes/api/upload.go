@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/base64"
 	"encoding/json"
+	"log"
 	"net/http"
 	"os"
 	"time"
@@ -17,22 +18,26 @@ import (
 func UploadFileManager(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
 		Static.ErrorRouteHandler(w, r, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
+		logger.WriteERRLog(" /api/upload.go 20 Method now allowed")
 		return
 	}
 
 	if r.Header.Get("token") != Conf.Conf.Token {
 		Static.ErrorRouteHandler(w, r, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+		logger.WriteERRLog(" /api/upload.go 26 Token not valid")
 		return
 	}
 
 	var nodeName string = r.Header.Get("node")
 	if nodeName == "" {
 		http.Error(w, "Node name must be specified", http.StatusBadRequest)
+		logger.WriteERRLog(" /api/upload.go 33 Node name must be specified")
 		return
 	}
 
 	if !Tools.StringInSlice(nodeName, Conf.Conf.Nodes) {
 		http.Error(w, "This node is not specified. maybe because misconfig", http.StatusBadRequest)
+		logger.WriteERRLog(" /api/upload.go 39 No node with " + nodeName)
 		return
 	}
 
@@ -56,13 +61,20 @@ func UploadFileManager(w http.ResponseWriter, r *http.Request) {
 			logger.WriteERRLog("api/upload.go 57 " + err.Error())
 			return
 		}
-	}
+	} else {
+		err := os.RemoveAll(Conf.Conf.DataDirectory + "/" + nodeName + "/")
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.WriteERRLog("api/upload.go 65 " + err.Error())
+			return
+		}
 
-	err := os.RemoveAll(Conf.Conf.DataDirectory + "/" + nodeName + "/")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		logger.WriteERRLog("api/upload.go 65 " + err.Error())
-		return
+		err = os.Mkdir(Conf.Conf.DataDirectory+"/"+nodeName, 0777)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.WriteERRLog("api/upload.go 57 " + err.Error())
+			return
+		}
 	}
 
 	// ok so till here we have data folder and the node's folder
@@ -102,7 +114,7 @@ func UploadFileManager(w http.ResponseWriter, r *http.Request) {
 
 	// got the client initialization message
 	InitialResponseFromWebsocketJson, _ := InitialResponseFromWebsocket.(map[string]interface{})
-	if InitialResponseFromWebsocketJson["event"] != "initiate_file" {
+	if InitialResponseFromWebsocketJson["Event"] != "initiate_file" {
 		logger.WriteERRLog("api/upload.go 107 " + InitialResponseFromWebsocket.(string))
 		ws.Close()
 		return
@@ -153,21 +165,23 @@ func UploadFileManager(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 
+		log.Println(subFolderData)
+
 		// we have got the event subfolder_data as followed
 		subFolderDataJson, _ := subFolderData.(map[string]interface{})
 
 		//check if the client send's EOF
-		if subFolderDataJson["event"] == "end_sharing" {
+		if subFolderDataJson["Event"] == "end_sharing" {
 			break
 		}
 
-		if subFolderDataJson["event"] != "subfolder_start" {
+		if subFolderDataJson["Event"] != "subfolder_start" {
 			logger.WriteERRLog("api/upload.go 166 " + subFolderData.(string))
 			ws.Close()
 			return
 		}
 
-		FolderNameFromClient := subFolderDataJson["name"].(string)
+		FolderNameFromClient := subFolderDataJson["Name"].(string)
 
 		// create the folder at this endpoint
 		err := os.Mkdir(Conf.Conf.DataDirectory+"/"+nodeName+"/"+FolderNameFromClient, 0777)
@@ -183,11 +197,13 @@ func UploadFileManager(w http.ResponseWriter, r *http.Request) {
 		type ServerResponse struct {
 			Event      string
 			FolderName string
+			Filename   string
 		}
 
 		serverResponse, err := json.Marshal(ServerResponse{
 			Event:      "subfolder_data_start",
 			FolderName: FolderNameFromClient,
+			Filename:   Conf.Conf.DataFileName,
 		})
 
 		if err != nil {
@@ -198,6 +214,7 @@ func UploadFileManager(w http.ResponseWriter, r *http.Request) {
 
 		// open the file to write
 		WriteAbleFile, _ := os.OpenFile(Conf.Conf.DataDirectory+"/"+nodeName+"/"+FolderNameFromClient+"/"+"data.zip", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0777)
+		defer WriteAbleFile.Close()
 
 		ws.WriteMessage(websocket.TextMessage, serverResponse)
 
@@ -224,14 +241,17 @@ func UploadFileManager(w http.ResponseWriter, r *http.Request) {
 				break
 			}
 
+			log.Println("2")
+
 			subFolderChunkDataJson := subFolderChunkData.(map[string]interface{})
 
 			// handle if the chunk ended
-			if subFolderChunkDataJson["event"] == "end_s_chunk" {
+			if subFolderChunkDataJson["Event"] == "end_s_chunk" {
+				log.Println("3")
 				break
 			}
 
-			if subFolderChunkDataJson["event"] != "subfolder_chunk_data" {
+			if subFolderChunkDataJson["Event"] != "subfolder_chunk_data" {
 				logger.WriteERRLog("api/upload.go 236 " + subFolderChunkData.(string))
 				ws.Close()
 				return

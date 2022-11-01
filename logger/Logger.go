@@ -10,14 +10,14 @@ import (
 
 func WriteLog(message string) bool {
 	// open the log file if not create it
-	LoggerFile, err := os.OpenFile("./logs/app.log", os.O_CREATE|os.O_WRONLY, 0644)
+	LoggerFile, err := os.OpenFile("./logs/app.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0777)
 
 	if err != nil {
 		return false
 	}
 
 	defer LoggerFile.Close()
-	n, err := LoggerFile.Write([]byte(message))
+	n, err := LoggerFile.Write([]byte("\n" + message))
 	if err != nil || n == 0 {
 		return false
 	}
@@ -29,14 +29,14 @@ func WriteLog(message string) bool {
 
 func WriteERRLog(message string) bool {
 	// open the log file if not create it
-	LoggerFile, err := os.OpenFile("./logs/app.error.log", os.O_CREATE|os.O_WRONLY, 0644)
+	LoggerFile, err := os.OpenFile("./logs/app.error.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0777)
 
 	if err != nil {
 		return false
 	}
 
 	defer LoggerFile.Close()
-	n, err := LoggerFile.Write([]byte(message))
+	n, err := LoggerFile.Write([]byte("\n" + message))
 	if err != nil || n == 0 {
 		return false
 	}
@@ -48,14 +48,14 @@ func WriteERRLog(message string) bool {
 
 func WriteHttpLogs(message string) bool {
 	// open the log file if not create it
-	LoggerFile, err := os.OpenFile("./logs/http.log", os.O_CREATE|os.O_WRONLY, 0644)
+	LoggerFile, err := os.OpenFile("./logs/http.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0777)
 
 	if err != nil {
 		return false
 	}
 
 	defer LoggerFile.Close()
-	n, err := LoggerFile.Write([]byte(message))
+	n, err := LoggerFile.Write([]byte("\n" + message))
 	if err != nil || n == 0 {
 		return false
 	}
@@ -67,7 +67,7 @@ func WriteHttpLogs(message string) bool {
 
 func WriteAutoHTTPLogs(w http.ResponseWriter, r *http.Request) bool {
 	// open the log file if not create it
-	LoggerFile, err := os.OpenFile("./logs/http.log", os.O_CREATE|os.O_WRONLY, 0644)
+	LoggerFile, err := os.OpenFile("./logs/http.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0777)
 	if err != nil {
 		return false
 	}
@@ -88,7 +88,7 @@ func WriteAutoHTTPLogs(w http.ResponseWriter, r *http.Request) bool {
 	token := r.Header.Get("token")
 
 	//log it to file
-	n, err := LoggerFile.Write([]byte(ip + " " + userAgent + " " + path + " " + token))
+	n, err := LoggerFile.Write([]byte("\n" + ip + " " + userAgent + " " + path + " " + token))
 	if err != nil || n == 0 {
 		return false
 	}
@@ -96,4 +96,14 @@ func WriteAutoHTTPLogs(w http.ResponseWriter, r *http.Request) bool {
 	log.Println("[HTTP LOG] > ", ip+" "+userAgent+" "+path+" "+token)
 	return true
 
+}
+
+func DeleteLogFiles() {
+	log.Println("remove all")
+	er := os.RemoveAll("./logs/")
+	if er != nil {
+		log.Panic(er)
+	}
+
+	os.Mkdir("./logs", 0777)
 }
