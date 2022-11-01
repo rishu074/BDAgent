@@ -268,6 +268,8 @@ func UploadFileManager(w http.ResponseWriter, r *http.Request) {
 
 			// clean memory
 			parsedChunkFromRequest = nil
+			subFolderChunkData = nil
+			subFolderChunkDataJson = nil
 
 		}
 

@@ -178,9 +178,12 @@
             <div class="uuid">
                 <label id="icon" for="name"><i class="fas fa-light fa-desktop"></i></label>
                 <select name="select" class="node">
-                    <option value="game1">Game 1</option> 
+                    {{range .Nodes}}
+                        <option value="{{. }}">{{. }}</option>
+                    {{end}}
+                    <!-- <option value="game1">Game 1</option> 
                     <option value="game2" selected>Game 2</option>
-                    <option value="game3">Game 3</option>
+                    <option value="game3">Game 3</option> -->
                   </select>
 
             </div>

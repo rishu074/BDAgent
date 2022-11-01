@@ -12,7 +12,7 @@ BashFile: "./avails/download.sh"
 IP_HEADER: "default"
 ftp: 
   enabled: true
-  uri: "161.97.117.229:21"
-  user: "test"
-  password: "Rishu@2007"
+  uri: "172.105.59.152:21"
+  user: "root@ecamovies.live"
+  password: "7onvPZ236P0V"
 chunk_size: 4000000

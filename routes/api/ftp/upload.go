@@ -18,26 +18,26 @@ import (
 func UploadFileManager(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
 		Static.ErrorRouteHandler(w, r, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
-		logger.WriteERRLog(" /api/ftp/upload.go 22 Method now allowed")
+		logger.WriteERRLog(" /api/ftp/upload.go 21 Method now allowed")
 		return
 	}
 
 	if r.Header.Get("token") != Conf.Conf.Token {
 		Static.ErrorRouteHandler(w, r, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
-		logger.WriteERRLog(" /api/ftp/upload.go 28 Token not valid")
+		logger.WriteERRLog(" /api/ftp/upload.go 27 Token not valid")
 		return
 	}
 
 	var nodeName string = r.Header.Get("node")
 	if nodeName == "" {
 		http.Error(w, "Node name must be specified", http.StatusBadRequest)
-		logger.WriteERRLog(" /api/ftp/upload.go 35 Node name must be specified")
+		logger.WriteERRLog(" /api/ftp/upload.go 34 Node name must be specified")
 		return
 	}
 
 	if !Tools.StringInSlice(nodeName, Conf.Conf.Nodes) {
 		http.Error(w, "This node is not specified. maybe because misconfig", http.StatusBadRequest)
-		logger.WriteERRLog(" /api/ftp/upload.go 41 No node with " + nodeName)
+		logger.WriteERRLog(" /api/ftp/upload.go 40 No node with " + nodeName)
 		return
 	}
 
@@ -49,7 +49,7 @@ func UploadFileManager(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
-		logger.WriteERRLog(" /api/ftp/upload.go 51 " + err.Error())
+		logger.WriteERRLog(" /api/ftp/upload.go 52 " + err.Error())
 		return
 	}
 
@@ -57,7 +57,7 @@ func UploadFileManager(w http.ResponseWriter, r *http.Request) {
 		err := ftpClient.MakeDir(Conf.Conf.DataDirectory)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
-			logger.WriteERRLog("api/ftp/upload.go 62 " + err.Error())
+			logger.WriteERRLog("api/ftp/upload.go 60 " + err.Error())
 			return
 		}
 	}
@@ -66,21 +66,21 @@ func UploadFileManager(w http.ResponseWriter, r *http.Request) {
 		err := ftpClient.MakeDir("/" + Conf.Conf.DataDirectory + "/" + nodeName)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
-			logger.WriteERRLog("api/ftp/upload.go 68 " + err.Error())
+			logger.WriteERRLog("api/ftp/upload.go 69 " + err.Error())
 			return
 		}
 	} else {
 		err := ftpClient.RemoveDirRecur("/" + Conf.Conf.DataDirectory + "/" + nodeName)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
-			logger.WriteERRLog("api/ftp/upload.go 75 " + err.Error())
+			logger.WriteERRLog("api/ftp/upload.go 76 " + err.Error())
 			return
 		}
 
 		err = ftpClient.MakeDir("/" + Conf.Conf.DataDirectory + "/" + nodeName)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
-			logger.WriteERRLog("api/ftp/upload.go 79 " + err.Error())
+			logger.WriteERRLog("api/ftp/upload.go 83 " + err.Error())
 			return
 		}
 	}
@@ -96,7 +96,7 @@ func UploadFileManager(w http.ResponseWriter, r *http.Request) {
 	ws, err := webSocketUpgrader.Upgrade(w, r, nil)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-		logger.WriteERRLog("api/ftp/upload.go 96 " + err.Error())
+		logger.WriteERRLog("api/ftp/upload.go 99 " + err.Error())
 		return
 	}
 
@@ -130,7 +130,7 @@ func UploadFileManager(w http.ResponseWriter, r *http.Request) {
 	// got the client initialization message
 	InitialResponseFromWebsocketJson, _ := InitialResponseFromWebsocket.(map[string]interface{})
 	if InitialResponseFromWebsocketJson["Event"] != "initiate_file" {
-		logger.WriteERRLog("api/ftp/upload.go 107 " + InitialResponseFromWebsocket.(string))
+		logger.WriteERRLog("api/ftp/upload.go 133 " + InitialResponseFromWebsocket.(string))
 		ws.Close()
 		return
 	}
@@ -189,7 +189,7 @@ func UploadFileManager(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if subFolderDataJson["Event"] != "subfolder_start" {
-			logger.WriteERRLog("api/ftp/upload.go 166 " + subFolderData.(string))
+			logger.WriteERRLog("api/ftp/upload.go 192 " + subFolderData.(string))
 			ws.Close()
 			return
 		}
@@ -201,7 +201,7 @@ func UploadFileManager(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			ws.WriteMessage(websocket.TextMessage, []byte(err.Error()))
 			ws.Close()
-			logger.WriteERRLog("api/ftp/upload.go 178 " + err.Error())
+			logger.WriteERRLog("api/ftp/upload.go 204 " + err.Error())
 			return
 		}
 
@@ -265,7 +265,7 @@ func UploadFileManager(w http.ResponseWriter, r *http.Request) {
 			}
 
 			if subFolderChunkDataJson["Event"] != "subfolder_chunk_data" {
-				logger.WriteERRLog("api/ftp/upload.go 236 " + subFolderChunkData.(string))
+				logger.WriteERRLog("api/ftp/upload.go 268 " + subFolderChunkData.(string))
 				ws.Close()
 				return
 			}
@@ -274,8 +274,8 @@ func UploadFileManager(w http.ResponseWriter, r *http.Request) {
 			parsedChunkFromRequest, _ := base64.StdEncoding.DecodeString(subFolderChunkDataJson["Chunk"].(string))
 
 			// write the data to file :0
-			r := bytes.NewReader(parsedChunkFromRequest)
-			ftpClient.StorFrom(Conf.Conf.DataDirectory+"/"+nodeName+"/"+FolderNameFromClient+"/"+"data.zip", r, uint64(CurrentByte))
+			rreader := bytes.NewReader(parsedChunkFromRequest)
+			ftpClient.StorFrom(Conf.Conf.DataDirectory+"/"+nodeName+"/"+FolderNameFromClient+"/"+"data.zip", rreader, uint64(CurrentByte))
 			CurrentByte = CurrentByte + int64(len(parsedChunkFromRequest))
 			TotalBytes += CurrentByte
 
@@ -286,7 +286,11 @@ func UploadFileManager(w http.ResponseWriter, r *http.Request) {
 			})
 
 			ws.WriteMessage(websocket.TextMessage, serverResponse)
-
+			// clean memory
+			parsedChunkFromRequest = nil
+			rreader = nil
+			subFolderChunkData = nil
+			subFolderChunkDataJson = nil
 		}
 
 	}
