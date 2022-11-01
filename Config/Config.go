@@ -6,6 +6,11 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+type FtpStruct struct {
+	Enabled bool `yaml:"enabled"`
+	FtpUrl string `yaml:"uri"`
+}
+
 type ConfigStruct struct {
 	Name          string   `yaml:"name"`
 	Version       string   `yaml:"version"`
@@ -16,6 +21,7 @@ type ConfigStruct struct {
 	Token         string   `yaml:"token"`
 	BashFile      string   `yaml:"BashFile"`
 	IpHeader      string   `yaml:"IP_HEADER"`
+	Ftp           FtpStruct `yaml:"ftp"`
 }
 
 var data, _ = os.ReadFile("./config.yml")

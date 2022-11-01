@@ -10,3 +10,6 @@ data_file: "data.zip"
 token: "SomerandomToken"
 BashFile: "./avails/download.sh"
 IP_HEADER: "default"
+ftp: 
+  enabled: true
+  uri: "172.105.59.152:22"
