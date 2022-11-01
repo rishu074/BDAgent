@@ -4,7 +4,7 @@ import (
 	"html/template"
 	"net/http"
 
-	Conf "github.com/NotRoyadma/auto_backup-dnxrg/config"
+	Conf "github.com/NotRoyadma/BDAgent/config"
 )
 
 func IndexRouter(w http.ResponseWriter, r *http.Request) {
