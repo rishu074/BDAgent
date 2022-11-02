@@ -11,7 +11,8 @@ fi
 
 echo "Starting Backup Script."
 # define args 
-args=$1
+token=$1
+port=$2
 
 # Check if pterodactyl directory exists 
 if [ ! -d "/var/lib/pterodactyl/volumes" ]; then
@@ -20,7 +21,8 @@ if [ ! -d "/var/lib/pterodactyl/volumes" ]; then
 fi
 
 echo ""
-echo "Node $args"
+echo "Token $token"
+echo "Port $port"
 echo ""
 
 if [[ $# -eq 0 ]]; then
@@ -85,22 +87,6 @@ do
         cd ../;
 done
 
-# Now we have our data folders setupped, now zip all the folders 
-echo "Zipping all the data folders"
-cd /uploads
-
-zip -r "$args" ./*
-
-# Now we have our data zip settupped,
-# Delete all the folders except the zip folder
-cd /uploads
-for name in ./*
-do
-        if [ "$name" != "./$args" ] ;
-        then
-            rm -rf $name
-        fi
- done
-
 # Now we have exactly what we want in /uploads folder
-echo "Dunaduna"
+# Send the request to client
+curl -X POST "localhost:$port/upload" -H "token: $token"
