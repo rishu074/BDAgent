@@ -11,6 +11,7 @@ import (
 	Conf "github.com/NotRoyadma/BDAgent/config"
 	"github.com/NotRoyadma/BDAgent/logger"
 	Static "github.com/NotRoyadma/BDAgent/routes/static"
+	humanize "github.com/dustin/go-humanize"
 	websocket "github.com/gorilla/websocket"
 	ftp "github.com/jlaffaye/ftp"
 )
@@ -105,7 +106,7 @@ func UploadFileManager(w http.ResponseWriter, r *http.Request) {
 	var TotalBytes int64 = 0
 	defer ws.Close()
 	defer func() {
-		s := Tools.Ptettier(TotalBytes)
+		s := humanize.Bytes(uint64(TotalBytes))
 		logger.WriteLog(nodeName + " uploaded " + s)
 	}()
 
