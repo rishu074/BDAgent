@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"syscall"
 
-	Conf "github.com/NotRoyadma/BDAgent/Config"
+	Conf "github.com/NotRoyadma/BDAgent/config"
 	"github.com/NotRoyadma/BDAgent/logger"
 	Home "github.com/NotRoyadma/BDAgent/routes"
 )
