@@ -35,6 +35,7 @@ This agent is only built for ubuntu/linux based distributions.
 # Create the directory for agent
 $ mkdir /var/apps
 $ mkdir /var/apps/bdagent
+$ mkdir logs
 $ cd /var/apps/bdagent
 
 # Install the latest binaries
@@ -86,4 +87,34 @@ ftp:
   password: "somepassword"
 chunk_size: 4000000
 ```
+### Setting up Systemd service
+```bash
+# Copy the service to systemd directory
+$ cd /var/apps/bdagent
+$ mv bdagent.service /etc/systemd/system/
+$ systemctl enable --now bdagent.service
+```
+
+### There are prebuilt loggers for http and application
+```bash
+# To view the app logs
+$ cat /var/apps/bdagent/logs/app.log
+
+# To view the http logs
+$ cat /var/apps/bdagent/logs/http.log
+
+# To view the error logs (if any)
+$ cat /var/apps/bdagent/logs/app.error.log
+
+# You can also view the systemctl service status by doing
+$ systemctl status bdagent.service
+
+# You can view live http,app and error logs by doing
+$ journalctl -u bdagent.service -e --follow
+```
+
+
+## Authors
+
+- [@NotRoyadma](https://www.github.com/NotRoyadma)
 
