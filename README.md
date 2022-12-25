@@ -69,7 +69,7 @@ $ touch config.yml
 An example demostration to config file
 ```
 name: "Auto backup dnxrg"
-version: "1.0.0"
+version: "1.0.1"
 port: 1337
 nodes: 
   - game1
