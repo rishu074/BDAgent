@@ -57,7 +57,7 @@ $ touch config.yml
 | `version`      | `string` | **Don't change it**. |
 | `port`      | `integer` | **Required**, Port of the application |
 | `nodes`      | `yaml-array` | **Required**, Names of the uploaders  |
-| `dataDirectory`      | `string` | **Required**, The name of the data directory  |
+| `dataDirectory`      | `string` | **Required**, The name of the data directory, *without any slash*  |
 | `data_file`      | `string` | **Required**, File which is set in client.  |
 | `token`      | `string` | **Required**, The authorization token for BDclient  |
 | `BashFile`      | `string` | **Required**, Let it be as it is  |
@@ -74,16 +74,16 @@ nodes:
   - game1
   - game2
   - game3
-dataDirectory: "./data"
+dataDirectory: "data"
 data_file: "data.zip"
 token: "SomerandomToken"
 BashFile: "./avails/download.sh"
 IP_HEADER: "default"
 ftp: 
-  enabled: true
+  enabled: false
   uri: "172.105.33.245:21"
   user: "username@ftp"
   password: "somepassword"
 chunk_size: 4000000
-
+```
 
