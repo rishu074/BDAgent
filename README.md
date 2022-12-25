@@ -41,6 +41,49 @@ $ cd /var/apps/bdagent
 $ wget https://github.com/NotRoyadma/BDAgent/releases/latest/download/agent
 $ wget https://github.com/NotRoyadma/BDAgent/releases/latest/download/bdagent.service
 ```
-    
+
+### Setup configuration file
+
+```bash
+# Create a config file
+$ touch config.yml
+```
+
+#### Data format of config file
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `name`      | `string` | **Required**. Name of the application |
+| `version`      | `string` | **Don't change it**. |
+| `port`      | `integer` | **Required**, Port of the application |
+| `nodes`      | `yaml-array` | **Required**, Names of the uploaders  |
+| `dataDirectory`      | `string` | **Required**, The name of the data directory  |
+| `data_file`      | `string` | **Required**, File which is set in client.  |
+| `token`      | `string` | **Required**, The authorization token for BDclient  |
+| `BashFile`      | `string` | **Required**, Let it be as it is  |
+| `IP_HEADER`      | `string` | **Required**, leave it `default` or if using cloudflare change it  |
+| `ftp`      | `yaml-object` | **Required**, The ftp configuration  |
+| `chunk_size`      | `integer` | **Required**, Dont change unless you don't know about it  |
+
+An example demostration to config file
+```
+name: "Auto backup dnxrg"
+version: "1.0.0"
+port: 1337
+nodes: 
+  - game1
+  - game2
+  - game3
+dataDirectory: "./data"
+data_file: "data.zip"
+token: "SomerandomToken"
+BashFile: "./avails/download.sh"
+IP_HEADER: "default"
+ftp: 
+  enabled: true
+  uri: "172.105.33.245:21"
+  user: "username@ftp"
+  password: "somepassword"
+chunk_size: 4000000
 
 
