@@ -279,7 +279,7 @@ func UploadFileManager(w http.ResponseWriter, r *http.Request) {
 			rreader := bytes.NewReader(parsedChunkFromRequest)
 			ftpClient.StorFrom(Conf.Conf.DataDirectory+"/"+nodeName+"/"+FolderNameFromClient+"/"+"data.zip", rreader, uint64(CurrentByte))
 			CurrentByte = CurrentByte + int64(len(parsedChunkFromRequest))
-			TotalBytes += CurrentByte
+			TotalBytes += int64(len(parsedChunkFromRequest))
 
 			// the client was waiting for server to send back the response after writing
 			serverResponse, _ := json.Marshal(ServerResponse{

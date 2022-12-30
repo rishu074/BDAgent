@@ -1,18 +1,18 @@
 name: "Auto backup dnxrg"
 version: "1.0.0"
-port: 1337
+port: 8888
 nodes: 
   - game1
   - game2
   - game3
 dataDirectory: "./data"
 data_file: "data.zip"
-token: "SomerandomToken"
+token: "HbEQ0283ew"
 BashFile: "./avails/download.sh"
 IP_HEADER: "default"
-ftp: 
+ftp:
   enabled: true
   uri: "172.105.59.152:21"
-  user: "root@ecamovies.live"
-  password: "7onvPZ236P0V"
+  user: "backups@dnxrg.net"
+  password: "XaQ#P%84V%&q"
 chunk_size: 4000000
